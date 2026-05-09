@@ -33,7 +33,8 @@ public class SecurityConfig {
             "/api-docs/**",
             "/v3/api-docs/**",
             "/api/public/menu",
-            "/api/public/menu/**"
+            "/api/public/menu/**",
+            "/api/orders/qr"
     };
 
     @Bean
