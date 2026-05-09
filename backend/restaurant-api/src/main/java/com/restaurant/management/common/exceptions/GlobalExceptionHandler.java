@@ -13,7 +13,8 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Map;import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.core.AuthenticationException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -159,5 +160,34 @@ public class GlobalExceptionHandler {
                 .validationErrors(validationErrors)
                 .timestamp(LocalDateTime.now())
                 .build();
+    }
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<ErrorResponse> handleDisabledException(
+            DisabledException exception,
+            HttpServletRequest request
+    ) {
+        ErrorResponse response = buildErrorResponse(
+                HttpStatus.FORBIDDEN,
+                "User account is disabled",
+                request.getRequestURI(),
+                null
+        );
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handleAuthenticationException(
+            AuthenticationException exception,
+            HttpServletRequest request
+    ) {
+        ErrorResponse response = buildErrorResponse(
+                HttpStatus.UNAUTHORIZED,
+                "Invalid internal ID or password",
+                request.getRequestURI(),
+                null
+        );
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 }
