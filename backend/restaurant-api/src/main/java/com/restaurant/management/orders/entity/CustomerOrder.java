@@ -106,4 +106,12 @@ public class CustomerOrder {
         return OrderStatus.FACTUREE.equals(status)
                 || OrderStatus.ANNULEE.equals(status);
     }
+    public void addItem(OrderItem item) {
+        items.add(item);
+        item.setOrder(this);
+    }
+
+    public void clearItems() {
+        items.clear();
+    }
 }
