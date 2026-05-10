@@ -56,6 +56,11 @@ const navItems = [
     href: "/dashboard/users",
     icon: Users,
   },
+  {
+  label: "Caisse",
+  href: "/cashier/invoices",
+  icon: ReceiptText,
+},
 ];
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
