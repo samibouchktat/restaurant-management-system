@@ -2,17 +2,34 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  activateTable,
+  createTable,
+  deactivateTable,
   getFloorPlan,
+  getTables,
   getTablesByServer,
+  updateTable,
   updateTableStatus,
 } from "./tables.api";
-import type { TableStatus } from "@/types/table";
+import type {
+  TableCreateRequest,
+  TableStatus,
+  TableUpdateRequest,
+} from "@/types/table";
 
 export const tableQueryKeys = {
   all: ["tables"] as const,
+  list: ["tables", "list"] as const,
   floorPlan: ["tables", "floor-plan"] as const,
   byServer: (serverId: number) => ["tables", "server", serverId] as const,
 };
+
+export function useTables() {
+  return useQuery({
+    queryKey: tableQueryKeys.list,
+    queryFn: getTables,
+  });
+}
 
 export function useFloorPlan() {
   return useQuery({
@@ -31,6 +48,34 @@ export function useTablesByServer(serverId?: number) {
   });
 }
 
+export function useCreateTable() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (request: TableCreateRequest) => createTable(request),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: tableQueryKeys.all });
+    },
+  });
+}
+
+export function useUpdateTable() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      tableId,
+      request,
+    }: {
+      tableId: number;
+      request: TableUpdateRequest;
+    }) => updateTable(tableId, request),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: tableQueryKeys.all });
+    },
+  });
+}
+
 export function useUpdateTableStatus() {
   const queryClient = useQueryClient();
 
@@ -42,11 +87,31 @@ export function useUpdateTableStatus() {
       tableId: number;
       status: TableStatus;
     }) => updateTableStatus(tableId, status),
-
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: tableQueryKeys.all,
-      });
+      queryClient.invalidateQueries({ queryKey: tableQueryKeys.all });
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+    },
+  });
+}
+
+export function useActivateTable() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: activateTable,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: tableQueryKeys.all });
+    },
+  });
+}
+
+export function useDeactivateTable() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deactivateTable,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: tableQueryKeys.all });
     },
   });
 }

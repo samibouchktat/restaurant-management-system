@@ -8,24 +8,28 @@ const statusConfig: Record<
   TableStatus,
   {
     label: string;
-    className: string;
-    dotClassName: string;
+    bg: string;
+    color: string;
+    border: string;
   }
 > = {
   LIBRE: {
     label: "Libre",
-    className: "border-emerald-500/30 bg-emerald-500/10 text-emerald-300",
-    dotClassName: "bg-emerald-400",
+    bg: "var(--color-success-bg)",
+    color: "var(--color-success)",
+    border: "var(--color-success)",
   },
   OCCUPEE: {
     label: "Occupée",
-    className: "border-red-500/30 bg-red-500/10 text-red-300",
-    dotClassName: "bg-red-400",
+    bg: "var(--color-danger-bg)",
+    color: "var(--color-danger)",
+    border: "var(--color-danger)",
   },
   EN_ATTENTE: {
     label: "En attente",
-    className: "border-amber-500/30 bg-amber-500/10 text-amber-300",
-    dotClassName: "bg-amber-400",
+    bg: "var(--color-warning-bg)",
+    color: "var(--color-warning)",
+    border: "var(--color-warning)",
   },
 };
 
@@ -34,9 +38,17 @@ export function TableStatusBadge({ status }: TableStatusBadgeProps) {
 
   return (
     <span
-      className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold ${config.className}`}
+      className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-black"
+      style={{
+        background: config.bg,
+        color: config.color,
+        borderColor: config.border,
+      }}
     >
-      <span className={`h-2 w-2 rounded-full ${config.dotClassName}`} />
+      <span
+        className="h-2 w-2 rounded-full"
+        style={{ background: config.color }}
+      />
       {config.label}
     </span>
   );

@@ -3,9 +3,11 @@ export type ZoneResponse = {
   name: string;
   description?: string | null;
   active: boolean;
+
   assignedServerId?: number | null;
   assignedServerInternalId?: string | null;
   assignedServerFullName?: string | null;
+  
   createdAt: string;
   updatedAt: string;
 };
